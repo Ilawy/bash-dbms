@@ -7,9 +7,6 @@ SCRIPT_MAIN_FOLDER_DIR="$HOME/$SCRIPT_MAIN_FOLDER_NAME"
 CONFIG_FILE_NAME=".initConfig.ini"
 CONFIG_FILE_DIR="$SCRIPT_MAIN_FOLDER_DIR/$CONFIG_FILE_NAME"
 
-# global variable for database location for fast access after initialize
-DATABASE_LOCATION_DIR=""
-
 # initilize
 initializeScript() {
     # if main script dir not exist then create it

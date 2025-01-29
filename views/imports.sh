@@ -1,3 +1,5 @@
 source "${VIEWS_DIR}/mainView.sh"
 source "${VIEWS_DIR}/createDBView.sh"
+source "${VIEWS_DIR}/selectDBView.sh"
+source "${VIEWS_DIR}/databaseOptionsView.sh"
 source "${VIEWS_DIR}/alertView.sh"

@@ -25,6 +25,7 @@ while true; do
         ;;
     2)
         DEFAULT_CHOICE=2
+        views_show_selectDBView
         ;;
     3)
         DEFAULT_CHOICE=3

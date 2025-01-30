@@ -1,4 +1,4 @@
-source "${MODULES_DIR}/global.sh"
+source "${MODULES_DIR}/globals.sh"
 source "${MODULES_DIR}/common.sh"
 source "${MODULES_DIR}/fs.sh"
 source "${MODULES_DIR}/ini.sh"

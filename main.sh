@@ -12,6 +12,11 @@ initializeScript
 # show main menu view
 DEFAULT_CHOICE=1
 while true; do
+    # TODO: confirm to create nested dirs
+    if [[ $(fs_dirExists $DATABASE_LOCATION_DIR) == FALSE ]]; then
+        mkdir $DATABASE_LOCATION_DIR
+
+    fi
     CHOICE=$(views_show_mainView $DEFAULT_CHOICE)
     # exit from script if use select exit
     if [ $? -ne 0 ]; then

@@ -12,7 +12,7 @@ views_show_databaseOptionsView() {
         case $choice in
         1)
             default_choice=1
-            read -p "Not implemented yet (enter to back)" voided
+            views_show_createTableView
             ;;
         2)
             default_choice=2

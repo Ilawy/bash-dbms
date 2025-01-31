@@ -1,6 +1,7 @@
 views_show_selectTableView() {
     if [[ -z $CURRENT_DB ]]; then
         logwrite "cannot select table without active db"
+        views_show_alertView "Unexpected Error" "Please reselect the database"
         return 1
     fi
     # get tables from the current database

@@ -16,7 +16,7 @@ views_show_databaseOptionsView() {
             ;;
         2)
             default_choice=2
-            read -p "Not implemented yet (enter to back)" voided
+            views_show_selectTableView
             ;;
         3)
             default_choice=3

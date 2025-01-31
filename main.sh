@@ -12,6 +12,7 @@ initializeScript
 # show main menu view
 DEFAULT_CHOICE=1
 while true; do
+    logwrite "program started"
     # TODO: confirm to create nested dirs
     if [[ $(fs_dirExists $DATABASE_LOCATION_DIR) == FALSE ]]; then
         mkdir $DATABASE_LOCATION_DIR

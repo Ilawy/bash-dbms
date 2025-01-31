@@ -3,7 +3,7 @@ views_show_databaseOptionsView() {
     local default_choice=1
     while true; do
         local choice=$(
-            dialog --stdout --nocancel --ok-label "Select" --default-item $default_choice --menu "Current Database: ${db_name}" 12 45 25 \
+            dialog --stdout --clear --nocancel --ok-label "Select" --default-item $default_choice --menu "Current Database: ${db_name}" 12 45 25 \
                 1 "Create Table" \
                 2 "Select Table" \
                 3 "Drop Table" \

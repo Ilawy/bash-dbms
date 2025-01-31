@@ -11,7 +11,7 @@
 
 # dialog --title "Confirmation" --yesno "Do you want to continue?" 7 40
 
-primaryKey_At=$(dialog --title "Create Table [Primary Key]" \
+primaryKey_At=$(dialog --clear --title "Create Table [Primary Key]" \
     --yesno "\nDo You Want To Set [$column_name] As Primary Key?\n\nif you select yes [$column_name] will be set as primary." 12 40 \
     2>&1 >/dev/tty)
 

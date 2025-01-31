@@ -19,7 +19,7 @@ views_show_selectDBView() {
 
     # select database
     local db_id
-    db_id=$(dialog --stdout --ok-label "Select" --menu "Choose a database" 12 45 25 "${dbs_array[@]}")
+    db_id=$(dialog --stdout --clear --ok-label "Select" --menu "Choose a database" 12 45 25 "${dbs_array[@]}")
 
     dialog_result=$?
 

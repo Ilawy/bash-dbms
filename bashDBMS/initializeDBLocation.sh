@@ -6,17 +6,17 @@ showSelectFolderDialog() {
     while true; do
 
         # Show dialog and wait for response
-        locationDir=$(dialog --title "Please select the location of the database" --fselect "/home/ahmed/file1" 15 55 2>&1 >/dev/tty)
+        locationDir=$(dialog --title "Please select the location of the database" --fselect "$HOME" 15 55 2>&1 >/dev/tty)
 
         # Check if the user selected a location or canceled the dialog
         if [ $? -eq 0 ]; then
             # make soure the selectedDir is not a file
             if [[ $(fs_fileExists $locationDir) == TRUE ]]; then
-                dialog --title "Message" --msgbox '\nYou have selected a file not a folder please select a folder.' 10 50
+                dialog --clear --title "Message" --msgbox '\nYou have selected a file not a folder please select a folder.' 10 50
 
             elif [[ $(fs_dirExists $locationDir) == FALSE ]]; then
                 mkdir -p $locationDir
-                dialog --title "Message" --msgbox "
+                dialog --clear --title "Message" --msgbox "
                 You have successfully selected
                 [$locationDir] 
                 as your default database location" 10 50
@@ -34,7 +34,8 @@ showSelectFolderDialog() {
 
     # if user cancel the dialog then show message and exit form script
     if [[ $locationDir == "" ]]; then
-        dialog --title "bashDBMS" --msgbox '\nYou have cancelled the operation. bashDBMS will now exit.' 10 50
+        dialog --clear --title "bashDBMS" --msgbox '\nYou have cancelled the operation. bashDBMS will now exit.' 10 50
+        clear
         exit 1
     fi
 
@@ -50,7 +51,7 @@ checkForDBLocation() {
 
     if [[ $locationDir == "" ]]; then
         # ask the user for configuration process
-        dialog --title "bashDBMS" --yesno 'Hello,
+        dialog --clear --title "bashDBMS" --yesno 'Hello,
 
 Before we proceed, please allow us a moment to configure the default settings for bashDBMS. This configuration process is required only the first time you use bashDBMS.
 
@@ -62,6 +63,7 @@ Would you like to start the configuration now?' 15 55
 
         # if user reject to configuer the script then exit
         if [[ $dialogResult == 1 ]]; then
+            clear
             exit 1
         fi
 

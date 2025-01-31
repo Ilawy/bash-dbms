@@ -18,9 +18,9 @@ while true; do
 
     fi
     CHOICE=$(views_show_mainView $DEFAULT_CHOICE)
-    # exit from script if use select exit
+    # exit from loop if use select exit
     if [ $? -ne 0 ]; then
-        exit 0
+        break
     fi
     # get options
     case $CHOICE in
@@ -36,7 +36,7 @@ while true; do
         DEFAULT_CHOICE=3
         ;;
     4)
-        exit 0
+        break
         ;;
     *)
         DEFAULT_CHOICE=1
@@ -44,3 +44,5 @@ while true; do
     esac
 
 done
+
+clear

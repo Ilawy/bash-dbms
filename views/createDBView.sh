@@ -1,7 +1,7 @@
 views_show_createDBView() {
     while true; do
         local DB_Name
-        DB_Name=$(dialog --title "Create Database" --inputbox "\nPlease Enter Database Name:" 10 40 2>&1 >/dev/tty)
+        DB_Name=$(dialog --clear --title "Create Database" --inputbox "\nPlease Enter Database Name:" 10 40 2>&1 >/dev/tty)
         if [ $? -eq 0 ]; then
             # check if DB_Name valid as folder name
             if [[ $(validator_is_folderName_valid "$DB_Name") == TRUE ]]; then

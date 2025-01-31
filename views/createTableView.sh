@@ -2,7 +2,6 @@ schemaObject='[]'
 getTableSchema() {
     # create loop and ask the user for table schema
     local primaryKey_At
-    local i=0
     local isPrimaryKeySelected="false"
     while true; do
         local column_name
@@ -10,7 +9,7 @@ getTableSchema() {
 
         # ask for column name
         while true; do
-            column_name=$(dialog --title "Create Table [Column Name]" --inputbox "\nPlease Enter Column Name:" 10 40 2>&1 >/dev/tty)
+            column_name=$(dialog --clear --title "Create Table [Column Name]" --inputbox "\nPlease Enter Column Name:" 10 40 2>&1 >/dev/tty)
             if [ $? -eq 0 ]; then
                 # check if column_name valid as name
                 if [[ $(validator_is_folderName_valid "$column_name") == FALSE ]]; then
@@ -23,31 +22,42 @@ getTableSchema() {
                 fi
             # stop function if user cancel the dialog
             else
-                echo "$schemaObject"
                 return 1
             fi
         done
 
         # ask for column type
         while true; do
-            column_type=$(dialog --clear --title "Create Table [Column Type]" \
+            column_type=$DT_STRING
+            local dialogResult=1
+            dialogResult=$(dialog --clear --title "Create Table [Column Type]" \
                 --menu "Column Type For [$column_name]:" 12 40 4 \
-                1 "String" \
-                2 "Number" \
-                3 "Boolean" \
+                1 $DT_STRING \
+                2 $DT_NUMBER \
+                3 $DT_BOOL \
                 2>&1 >/dev/tty)
             # if user cancel the dialog then stop the loop
             if [ $? -ne 0 ]; then
-                echo "$schemaObject"
                 return 1
             else
+                case $dialogResult in
+                2)
+                    column_type=$DT_NUMBER
+                    ;;
+                3)
+                    column_type=$DT_BOOL
+                    ;;
+                *)
+                    column_type=$DT_STRING
+                    ;;
+                esac
                 break
             fi
 
         done
 
         # ask for primary key
-        dialog --title "Create Table [Primary Key]" \
+        dialog --clear --title "Create Table [Primary Key]" \
             --yesno "\nDo You Want To Set [$column_name] As Primary Key?\n\nif you select yes [$column_name] will be set as primary." 12 40 \
             2>&1 >/dev/tty
 
@@ -61,10 +71,8 @@ getTableSchema() {
 
         schemaObject=$(echo "$schemaObject" | jq ". += [$new_object]")
 
-        i=$(($i + 1))
-
         # ask if user want to add another column
-        dialog --title "Create Table" --yesno "Do you want to add another column?" 7 40
+        dialog --clear --title "Create Table" --yesno "Do you want to add another column?" 7 40
         if [ $? -ne 0 ]; then
             break
         fi
@@ -87,11 +95,13 @@ getTableSchema() {
 }
 
 views_show_createTableView() {
-    local table_name
     $schemaObject='[]'
+    local tableObject='{ "schema": [], "data": [] }'
 
     while true; do
-        table_name=$(dialog --title "Create Table" --inputbox "\nPlease Enter Table Name:" 10 40 2>&1 >/dev/tty)
+        # ask user for table name
+        local table_name
+        table_name=$(dialog --clear --title "Create Table" --inputbox "\nPlease Enter Table Name:" 10 40 2>&1 >/dev/tty)
         if [ $? -eq 0 ]; then
             # check if table_name valid as file name
             if [[ $(validator_is_folderName_valid "$table_name") == TRUE ]]; then
@@ -101,24 +111,19 @@ views_show_createTableView() {
                     continue
                 fi
 
-                #  //////////////////
-
-                #  ///////////////////
-
-                # get the table schema
-                # schema_result=$(getTableSchema)
                 getTableSchema
+                # check if user cansel the dialog
+                if [ $? -ne 0 ]; then
+                    return 1
+                fi
 
-                echo "HI $schemaObject"
-                read
-
-                # start to create file call schema and data
-                # then add shema to file and data to file
+                tableObject=$(echo "$tableObject" | jq -c --argjson val "$schemaObject" '.schema = $val')
 
                 # create the table File
-                # touch $(path_join "$DATABASE_LOCATION_DIR/$CURRENT_DB" "$table_name")
+                touch $(path_join "$DATABASE_LOCATION_DIR/$CURRENT_DB" "$table_name")
+                echo "$tableObject" >$(path_join "$DATABASE_LOCATION_DIR/$CURRENT_DB" "$table_name")
 
-                # views_show_alertView "Success" "\n\nTable With Name [$table_name] created successfully!"
+                views_show_alertView "Success" "\n\nTable With Name [$table_name] created successfully!"
                 return 0
             else
                 views_show_alertView "Error" "\n\nTable name [$table_name] is not valid please enter Name contains only [a-z A-Z 0-9 and _]."

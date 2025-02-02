@@ -20,7 +20,7 @@ views_show_databaseOptionsView() {
             ;;
         3)
             default_choice=3
-            read -p "Not implemented yet (enter to back)" voided
+            views_show_dropTableView
             ;;
         4)
             default_choice=4

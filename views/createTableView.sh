@@ -13,9 +13,11 @@ getTableSchema() {
             if [ $? -eq 0 ]; then
                 # check if column_name valid as name
                 if [[ $(validator_is_folderName_valid "$column_name") == FALSE ]]; then
+                    logwrite "tried to create table with invalid column name $column_name"
                     views_show_alertView "Error" "\n\nColumn name [$column_name] is not valid please enter Name contains only [a-z A-Z 0-9 and _]."
 
                 elif echo "$schemaObject" | jq -e "any(.[]; .column_name == \"$column_name\")" >/dev/null; then
+                    logwrite "tried to create table with duplicated column name $column_name"
                     views_show_alertView "Error" "\n\nColumn name [$column_name] is already exist please enter another name"
                 else
                     break
@@ -87,7 +89,8 @@ getTableSchema() {
     # check if user select any column to be primary
     if [[ $isPrimaryKeySelected == "false" ]]; then
         local first_column_name=$(echo "$schemaObject" | jq -r '.[0].column_name')
-
+        logwite "tried to create table with no primary key"
+        # TODO: add a list of columns to choose primary key from (UX)
         views_show_alertView "Error" "\n\nYou have not set any column as primary key we will set the first column [${first_column_name}] as primary key."
     fi
 
@@ -107,6 +110,7 @@ views_show_createTableView() {
             if [[ $(validator_is_folderName_valid "$table_name") == TRUE ]]; then
                 # check if table_name already exist
                 if [[ $(fs_fileExists $(path_join "$DATABASE_LOCATION_DIR/$CURRENT_DB" "$table_name")) == TRUE ]]; then
+                    logwite "tried to create table with existing name $table_name"
                     views_show_alertView "Error" "\n\nTable name [$table_name] already exist in database [$CURRENT_DB] please enter another name."
                     continue
                 fi
@@ -122,10 +126,11 @@ views_show_createTableView() {
                 # create the table File
                 touch $(path_join "$DATABASE_LOCATION_DIR/$CURRENT_DB" "$table_name")
                 echo "$tableObject" >$(path_join "$DATABASE_LOCATION_DIR/$CURRENT_DB" "$table_name")
-
+                logwrite "new table created with name $table_name"
                 views_show_alertView "Success" "\n\nTable With Name [$table_name] created successfully!"
                 return 0
             else
+                logwrite "tried to create table with invalid name $table_name"
                 views_show_alertView "Error" "\n\nTable name [$table_name] is not valid please enter Name contains only [a-z A-Z 0-9 and _]."
             fi
 

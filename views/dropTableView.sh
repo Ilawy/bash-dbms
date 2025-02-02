@@ -1,13 +1,13 @@
 views_show_dropTableView() {
     if [[ -z $CURRENT_DB ]]; then
-        logwrite "cannot select table without active db"
+        logwrite "tried to drop table without active db"
         views_show_alertView "Unexpected Error" "Please reselect the database"
         return 1
     fi
     # get tables from the current database
     local tables=($(ls $DATABASE_LOCATION_DIR/$CURRENT_DB))
     if [ ${#tables[@]} -eq 0 ]; then
-        logwrite "trying to list empty database ($CURRENT_DB)"
+        logwrite "tried to list empty database ($CURRENT_DB)"
         views_show_alertView "Error" "\n\nThere's no tables to be deleted in this database"
         return 1
     fi

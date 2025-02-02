@@ -80,6 +80,7 @@ views_show_insertTableView() {
             local quoted_value="\"$f_value\""
             result_object=$(echo $result_object | jq ". += {$quoted_name: $quoted_value}")
         else
+            logwrite "tried to insert table with wrong input for field [$f_name] of type $f_type"
             views_show_alertView "Type error" "Field [$f_name] of type $f_type recevied wrong input"
             views_show_insertTableView
             return
@@ -92,6 +93,7 @@ views_show_insertTableView() {
         local iter_pk_val=$(echo $data | jq ".data[$i].$pk_key")
         local new_pk_val=$(echo $result_object | jq ".$pk_key")
         if [[ $iter_pk_val == $new_pk_val ]]; then
+            logwrite "tried to insert table with duplicate primary key [$pk_key]"
             views_show_alertView "Duplication error" "Field [$pk_key] has a duplicate value"
             views_show_insertTableView
             return 0
@@ -100,5 +102,6 @@ views_show_insertTableView() {
     # MARK: push new row
     final_data=$(jq ".data += [${result_object}]" <<<$data)
     echo $final_data >$table_file
+    logwrite "added new row to table [$CURRENT_TABLE]"
     views_show_alertView "Done" "Data added successfully"
 }

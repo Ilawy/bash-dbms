@@ -4,7 +4,7 @@ views_show_selectDBView() {
 
     # check if there is no databases
     if [ ${#dbs[@]} -eq 0 ]; then
-        echo "Array is empty"
+        logwrite "tried to select database without any databases"
         views_show_alertView "Error" "\n\nThere is no databases please create one then select it."
         return 1
     fi

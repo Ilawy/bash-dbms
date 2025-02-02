@@ -89,7 +89,7 @@ getTableSchema() {
     # check if user select any column to be primary
     if [[ $isPrimaryKeySelected == "false" ]]; then
         local first_column_name=$(echo "$schemaObject" | jq -r '.[0].column_name')
-        logwite "tried to create table with no primary key"
+        logwrite "tried to create table with no primary key"
         # TODO: add a list of columns to choose primary key from (UX)
         views_show_alertView "Error" "\n\nYou have not set any column as primary key we will set the first column [${first_column_name}] as primary key."
     fi
@@ -110,7 +110,7 @@ views_show_createTableView() {
             if [[ $(validator_is_folderName_valid "$table_name") == TRUE ]]; then
                 # check if table_name already exist
                 if [[ $(fs_fileExists $(path_join "$DATABASE_LOCATION_DIR/$CURRENT_DB" "$table_name")) == TRUE ]]; then
-                    logwite "tried to create table with existing name $table_name"
+                    logwrite "tried to create table with existing name $table_name"
                     views_show_alertView "Error" "\n\nTable name [$table_name] already exist in database [$CURRENT_DB] please enter another name."
                     continue
                 fi

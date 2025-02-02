@@ -14,11 +14,11 @@ views_show_createDBView() {
 
                 # create the database folder
                 mkdir -p "$DATABASE_LOCATION_DIR/$DB_Name"
-                logwite "new database created with name $DB_Name"
+                logwrite "new database created with name $DB_Name"
                 views_show_alertView "Success" "\n\nDatabase With Name [$DB_Name] created successfully!"
                 return 0
             else
-                logwite "tried to create database with invalid name $DB_Name"
+                logwrite "tried to create database with invalid name $DB_Name"
                 views_show_alertView "Error" "\n\nDatabase name [$DB_Name] is not valid please enter Name contains only [a-z A-Z 0-9 and _]."
             fi
 

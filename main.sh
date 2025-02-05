@@ -6,6 +6,9 @@ source "./modules/imports.sh"
 source "./bashDBMS/initialize.sh"
 source "./views/imports.sh"
 
+# initialize commands
+initializeCommands
+
 # initial default script configurations
 initializeScript
 

@@ -1,4 +1,5 @@
 source "${BASHDBMS_DIR}/initializeDBLocation.sh"
+source "${BASHDBMS_DIR}/initializeCommands.sh"
 
 # path to main folder that contains all config for the main script
 SCRIPT_MAIN_FOLDER_NAME=".bashDBMS"

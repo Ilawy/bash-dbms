@@ -67,3 +67,16 @@
 # done
 
 # zenity --list --title="Choose script" "${arg_cols[@]}" "${arg_cells[@]}"
+
+# echo "$1" | jq --raw-output '
+#    .schema[]
+#    | .column_name
+# ' | paste -s -d ,
+
+# echo "$1" | jq -r '
+#    .data[]
+#   | [ keys[] as $k | .[$k] ]
+#   | @csv
+# '
+
+echo $(echo "$1" | jq '.data | length')

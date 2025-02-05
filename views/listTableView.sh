@@ -16,29 +16,41 @@ views_show_listTableView() {
     fi
 
     local data=$(cat $table_file)
-
-    col_names=$(jq '.schema | map(.column_name)' <<<"$data")
-    col_names_length=$(jq '. | length' <<<"$col_names")
-
-    rows=$(jq '.data' <<<"$data")
-    rows_length=$(jq '. | length' <<<"$rows")
-
-    arg_cols=()
-    arg_cells=()
-
-    for ((i = 0; i < $col_names_length; i++)); do
-        arg_cols+=("--column" "$(jq -r ".[$i]" <<<"$col_names")")
-    done
-
-    for ((i = 0; i < $rows_length; i++)); do
-        for ((j = 0; j < $col_names_length; j++)); do
-            col_name=$(jq -r ".[$j]" <<<"$col_names")
-            echo ".data[$i].${col_name}"
-            arg_cells+=("$(jq -r ".[$i].${col_name}" <<<"$rows")")
-        done
-    done
-    local result=$(zenity --list --title="Choose script" "${arg_cols[@]}" "${arg_cells[@]}")
+    local table_length=$(echo "$data" | jq '.data | length')
+    if [[ $table_length -eq 0 ]]; then
+        logwrite "cannot display an empty table"
+        views_show_alertView "Error" "Please add some data to the table [$CURRENT_TABLE] to display them"
+        return 1
+    fi
+    local primary_key_index=$(echo "$data" | jq '[.schema[] | .primary_key == true] | index(true)')
     clear
-    echo "$result"
+    local row_pk=$({
+        # print columns for gum
+        echo "$data" | jq --raw-output '.schema[] | .column_name' | paste -s -d ,
+        # print rows for gum
+        # https://qmacro.org/blog/posts/2022/05/19/json-object-values-into-csv-with-jq/
+        echo "$data" | jq -r '.data[] | [ keys_unsorted[] as $k | .[$k] ] | @csv'
+    } | gum table -r $primary_key_index --show-help)
+    if [[ -z $row_pk ]]; then
+        # no choice, just go back
+        return 1
+    fi
+    clear
+
+    local choice=$(gum choose --header="Select an option" update delete)
+    case "$choice" in
+    "update")
+        read -p "Not implemented yet (enter to back)" voided
+        views_show_listTableView
+        ;;
+    "delete")
+        read -p "Not implemented yet (enter to back)" voided
+        views_show_listTableView
+        ;;
+    *)
+        views_show_listTableView
+        ;;
+    esac
+    # clear
     return 1
 }

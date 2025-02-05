@@ -39,12 +39,31 @@
 #     echo "... $line ..."
 # done <<<"$VALUES"
 
-old='{
-    "names": [],
-    "kids": [],
-    "a": 3 
-}'
+# index_of_row=$(jq '[ .data[] | .id == "1" ] | index(true)' <<<"$1")
+# result='{"name" : "ahmed"}'
+# echo $(jq ".data[$index_of_row] = ${result}" <<<"$1")
 
-echo $(jq '.names  += [{
-    "value": "aka"
-}]' <<<$old)
+# ------------------ list ------------------
+
+# col_names=$(jq '.schema | map(.column_name)' <<<"$1")
+# col_names_length=$(jq '. | length' <<<"$col_names")
+
+# rows=$(jq '.data' <<<"$1")
+# rows_length=$(jq '. | length' <<<"$rows")
+
+# arg_cols=()
+# arg_cells=()
+
+# for ((i = 0; i < $col_names_length; i++)); do
+#     arg_cols+=("--column" "$(jq -r ".[$i]" <<<"$col_names")")
+# done
+
+# for ((i = 0; i < $rows_length; i++)); do
+#     for ((j = 0; j < $col_names_length; j++)); do
+#         col_name=$(jq -r ".[$j]" <<<"$col_names")
+#         echo ".data[$i].${col_name}"
+#         arg_cells+=("$(jq -r ".[$i].${col_name}" <<<"$rows")")
+#     done
+# done
+
+# zenity --list --title="Choose script" "${arg_cols[@]}" "${arg_cells[@]}"

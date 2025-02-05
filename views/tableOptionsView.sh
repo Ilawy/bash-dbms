@@ -17,7 +17,7 @@ views_show_tableOptionsView() {
             ;;
         2)
             default_choice=2
-            read -p "Not implemented yet (enter to back)" voided
+            views_show_listTableView
 
             ;;
         3)

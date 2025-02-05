@@ -16,6 +16,7 @@ views_show_listTableView() {
     fi
 
     local data=$(cat $table_file)
+    local primary_key=$(echo "$data" | jq '.schema[] | select(.primary_key == true)' | jq -r '.column_name')
     local table_length=$(echo "$data" | jq '.data | length')
     if [[ $table_length -eq 0 ]]; then
         logwrite "cannot display an empty table"
@@ -53,8 +54,7 @@ views_show_listTableView() {
     local choice=$(gum choose --header="Select an option" update delete)
     case "$choice" in
     "update")
-        read -p "Not implemented yet (enter to back)" voided
-        views_show_listTableView
+        views_show_updateRowView $selected_index $table_file $primary_key
         ;;
     "delete")
         views_show_deleteRowView $selected_index $table_file

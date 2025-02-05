@@ -35,8 +35,10 @@ while true; do
         ;;
     3)
         DEFAULT_CHOICE=3
+        views_show_deleteDBView
         ;;
-    4)
+    4) ;;
+    5)
         break
         ;;
     *)

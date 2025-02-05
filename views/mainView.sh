@@ -7,8 +7,9 @@ views_show_mainView() {
             --menu "\nChoose an option:" 15 50 2 \
             1 "Create Database" \
             2 "Select Database" \
-            3 "Settings" \
-            4 "Exit" \
+            3 "Delete Database" \
+            4 "Settings" \
+            5 "Exit" \
             2>&1 >/dev/tty
     )
 

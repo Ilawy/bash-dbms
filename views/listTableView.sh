@@ -22,19 +22,32 @@ views_show_listTableView() {
         views_show_alertView "Error" "Please add some data to the table [$CURRENT_TABLE] to display them"
         return 1
     fi
-    local primary_key_index=$(echo "$data" | jq '[.schema[] | .primary_key == true] | index(true)')
     clear
-    local row_pk=$({
-        # print columns for gum
-        echo "$data" | jq --raw-output '.schema[] | .column_name' | paste -s -d ,
-        # print rows for gum
-        # https://qmacro.org/blog/posts/2022/05/19/json-object-values-into-csv-with-jq/
-        echo "$data" | jq -r '.data[] | [ keys_unsorted[] as $k | .[$k] ] | @csv'
-    } | gum table -r $primary_key_index --show-help)
-    if [[ -z $row_pk ]]; then
+
+    local selected_line=$({
+        # Print header row
+        echo -n "index,"
+        echo "$data" | jq -r '.schema[].column_name' | paste -s -d ','
+        # Print data rows with index
+        echo "$data" | jq -r '
+            def get_row_values($schema; $row):
+              $schema | map($row[.column_name] | tostring);
+            .schema as $schema
+            | .data
+            | to_entries
+            | map([.key | tostring] + (get_row_values($schema; .value)))
+            | .[]
+            | @csv'
+    } | gum table --show-help)
+
+    if [[ -z "$selected_line" ]]; then
         # no choice, just go back
         return 1
     fi
+
+    # Extract the row index (first field from CSV)
+    local selected_index=$(echo "$selected_line" | cut -d',' -f1)
+
     clear
 
     local choice=$(gum choose --header="Select an option" update delete)
@@ -44,13 +57,11 @@ views_show_listTableView() {
         views_show_listTableView
         ;;
     "delete")
-        read -p "Not implemented yet (enter to back)" voided
-        views_show_listTableView
+        views_show_deleteRowView $selected_index $table_file
         ;;
     *)
         views_show_listTableView
         ;;
     esac
-    # clear
     return 1
 }
